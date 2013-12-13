@@ -1,7 +1,7 @@
 okta-node
 =========
 
-A small node API to interface with the Okta API
+A small NodeJS framework for working with the [Okta](http://www.okta.com/) API
 
 # Overview
 This API is a small layer that handles talking to the Okta API. Primarily:
@@ -27,7 +27,7 @@ var okta = new OktaAPI("Your-Okta-API-Key", "your-domain", true);
 ```
 
 Note that all calls to the OktaAPI are returned in the following format:
-```json
+```JSON
 {
     success: true,
     resp: {
@@ -41,7 +41,7 @@ Note that simply because the "success" property is true, doesn't mean your reque
 - Some actions will return HTTP Status 204 - No Content. These will not have a resp property.
 
 If something went wrong while attempting to make a request to Okta, this API will return an object in the following format:
-```json
+```JSON
 {
     success: false,
     error: "Reason why the call failed",
@@ -82,3 +82,10 @@ okta.activateUser(newUser.id, true, null);
 
 # More Docs!
 All public-facing methods are documented with a Doxygen-like syntax. You can run a tool like [YUIDoc](http://yui.github.io/yuidoc/) to generate your own set.
+
+# Disclaimer & License
+Please be aware that all material published under the [OktaIT](https://github.com/OktaIT/) project have been written by the [Okta](http://www.okta.com/) IT Department but are not NOT OFFICAL software release of Okta Inc.  As such, the software is provided "as is" without warranty or customer support of any kind.
+
+This project is licensed under the MIT license, for more details please see the LICENSE file.
+
+
