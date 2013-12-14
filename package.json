@@ -1,0 +1,20 @@
+{
+    name: "okta-node",
+    description: "Interfaces with the Okta API via NodeJS",
+    author: "Josh Johnson <jjohnson@okta.com>",
+    dependencies: {
+        "request": "2.29.0"
+    },
+    repository: {
+        "type": "git",
+        "url": "http://github.com/oktait/okta-node.git"
+    },
+    bugs: {
+        "url": "http://github.com/oktait/okta-node/issues"
+    },
+    main: "index.js",
+    version: "0.1",
+    engines: {
+        "node": "*"
+    }
+}
