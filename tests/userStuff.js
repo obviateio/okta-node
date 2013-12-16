@@ -36,7 +36,7 @@ function main() {
 		ok();
 	});
 
-	okta.getUsers(function(d) {
+	okta.getUsers(undefined, function(d) {
 		checking("getUsers");
 		d.should.have.property("success", true);
 		d.should.have.property("resp").and.should.be.instanceof(Array);
