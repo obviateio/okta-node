@@ -1,5 +1,5 @@
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("00n3pI5aq6y9eoZwrS9zRFygEfBj-dwYt4D20cFPeW", "jjohnson", true);
+var okta = new OktaAPI("", "jjohnson", true);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
