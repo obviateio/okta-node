@@ -30,6 +30,7 @@ Note that all calls to the OktaAPI are returned in the following format:
 ```JSON
 {
     success: true,
+    paged: false,
     resp: {
         <json object from Okta API>
         }
@@ -39,6 +40,19 @@ Note that all calls to the OktaAPI are returned in the following format:
 Note that simply because the "success" property is true, doesn't mean your request was accepted by Okta.
 - You should also check the resp property for an errorCode property - which is the error returned by Okta.
 - Some actions will return HTTP Status 204 - No Content. These will not have a resp property.
+
+Paginated requests are encouraged where available; this API will automatically detect and advance through all the data from a paginated request, calling the callback with each page.
+Pagintated responses will be returned in the following format:
+```JSON
+{
+    success: true,
+    paged: true,
+    pageEnd: false,
+    resp: {
+        <json object from OktaAPI>
+    }
+}
+```
 
 If something went wrong while attempting to make a request to Okta, this API will return an object in the following format:
 ```JSON
