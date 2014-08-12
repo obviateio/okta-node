@@ -29,10 +29,10 @@ var okta = new OktaAPI("Your-Okta-API-Key", "your-domain", true);
 Note that all calls to the OktaAPI are returned in the following format:
 ```JSON
 {
-    success: true,
-    paged: false,
-    resp: {
-        <json object from Okta API>
+    "success": true,
+    "paged": false,
+    "resp": {
+        "<json object from Okta API>"
         }
 }
 ```
@@ -45,11 +45,11 @@ Paginated requests are encouraged where available; this API will automatically d
 Pagintated responses will be returned in the following format:
 ```JSON
 {
-    success: true,
-    paged: true,
-    pageEnd: false,
-    resp: {
-        <json object from OktaAPI>
+    "success": true,
+    "paged": true,
+    "pageEnd": false,
+    "resp": {
+        "<json object from OktaAPI>"
     }
 }
 ```
@@ -57,9 +57,9 @@ Pagintated responses will be returned in the following format:
 If something went wrong while attempting to make a request to Okta, this API will return an object in the following format:
 ```JSON
 {
-    success: false,
-    error: "Reason why the call failed",
-    resp: "Response from Okta"
+    "success": false,
+    "error": "Reason why the call failed",
+    "resp": "Response from Okta"
 }
 ```
 This object MAY NOT include the "resp" property. Existence of it means one of the following:
@@ -87,11 +87,14 @@ okta.addUser(newProfile, newCreds, false, function(data) {
     } else {
         console.log("Successfully provisioned new user!");
         newUser = data.resp;
+        doThings();
     }
 });
-doCoolThingsWith(newUser);
-doMoreCoolThingsWith(newUser);
-okta.activateUser(newUser.id, true, null);
+function doThings() {
+    doCoolThingsWith(newUser);
+    doMoreCoolThingsWith(newUser);
+    okta.activateUser(newUser.id, true, null);
+}
 ```
 
 # More Docs!
