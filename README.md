@@ -26,7 +26,7 @@ If you're testing in the Okta Preview environment, add a bool to the end of the 
 var okta = new OktaAPI("Your-Okta-API-Key", "your-domain", true);
 ```
 
-<your-domain> should only be __your Okta subdomain__ and should not include 'okta.com' as this will be appended automatically.
+Note that 'your-domain' should only be __your Okta subdomain__ and should not include 'okta.com' as this will be appended automatically.
 
 Note that all calls to the OktaAPI are returned in the following format:
 ```JSON
