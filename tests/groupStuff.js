@@ -50,14 +50,27 @@ function doThingsWithGroup() {
             ok();
         });
     });
-    okta.getUsersInGroup(gid, function(d) {
+    okta.getUsersInGroup(gid,null, function(d) {
         checking("getUsersInGroup");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
-    })
+    });
+
+    okta.getUsersInGroup(gid, {'limit' : 20}, function(d) {
+        checking("getUsersInGroup with limit");
+        d.should.have.property("success", true);
+        d.should.have.property("resp").instanceof(Array);
+        ok();
+    });
     okta.getGroups(null, function(d) {
         checking("getGroups");
+        d.should.have.property("success", true);
+        d.should.have.property("resp").instanceof(Array);
+        ok();
+    });
+    okta.getGroups({'q': "Test-" + now, 'limit' : 1 }, function(d) {
+        checking("getGroups with query");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();

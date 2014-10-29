@@ -111,18 +111,6 @@ function checkGetUsers()
 		ok();
 	});
 
-	//check filters, filters included as string, just this should be fine
-	okta.getUsers("filter=lastUpdated%20gt%20%222013-06-01T00:00:00.000Z%22", function(d) {
-		checking("getUsers with filter");
-		d.should.have.property("success", true);
-
-		//d.should.have.property("resp")/.and != d.resp anymore
-		//it's like an object full of arrays, contains some metadata it looks like
-		d.should.have.property("resp");
-		var resp = d.resp;
-		resp.should.be.instanceof(Array);
-		ok();
-	});
 }
 
 
