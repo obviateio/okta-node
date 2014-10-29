@@ -1,5 +1,5 @@
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("", "jjohnson", true);
+var okta = new OktaAPI("00sG9QNcq956v_90a7SV5WmwbM06SrZ_rbHs_VpyR5", "khe", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
@@ -71,7 +71,7 @@ function doThingsWithGroup() {
 }
 
 function getUser() {
-    okta.getUser("snofox@snofox.net", function(d) {
+    okta.getUser("test@example.com", function(d) {
         if (!d.success) {
             throw new Error("Failed to get user from Okta: " + d.error);
         } else if (d.resp.hasOwnProperty("errorCode")) {
