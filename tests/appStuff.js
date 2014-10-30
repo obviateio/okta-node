@@ -13,10 +13,7 @@ var ok = function() {
 }
 
 var now = new Date().valueOf();
-var lastUpdated = "2013-09-09T16:25:14.000Z";
-var created = "2013-09-09T16:25:14.000Z";
-//var newApp = OktaAPI.Helpers.constructAppModel("testId", "testName", "testLabel", );
-
+var appID = "0oa9iu0rJASLAWPIYBQD";
 var newApp = 
 {
   "name": "bookmark",
@@ -25,7 +22,7 @@ var newApp =
   "settings": {
     "app": {
       "requestIntegration": false,
-      "url": "https://example.com/bookmark.htm"
+      "url": "https://example.com/bookmark.htm" 
     }
   }
 };
@@ -35,10 +32,17 @@ log("Starting Test Suite...", true);
 
 okta.addApplication(newApp, function(d) {
     checking("addApp");
-    d.should.have.property("success", true);
-    d.should.have.property("resp").with.property("id");
+    //d.should.have.property("success", true);
+    //d.should.have.property("resp").with.property("id");
     ok();
 });
 
 
+
+okta.getApplication(appID, function(d) {
+    checking("getApp");
+    d.should.have.property("success", true);
+    d.should.have.property("resp").with.property("id");
+    ok();
+});
 
