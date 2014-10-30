@@ -27,6 +27,14 @@ okta.createSession("kevin.he@okta.com", "160891Preview", null, function(d) {
     doThingsWithSession();
 });
 
+okta.createSession("kevin.he@okta.com", "160891Preview", {'additionalFields' : 'cookieToken'}, function(d) {
+    checking("createSession with one time token");
+    d.should.have.property("success", true);
+    d.should.have.property("resp").with.property("id");
+    //sessionId = d.resp.id;
+    ok();
+});
+
 function doThingsWithSession() {
     okta.validateSession(sessionId, function(d) {
         checking("validateSession");
