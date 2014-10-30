@@ -50,14 +50,14 @@ function checkAppOps()
 		    d.should.have.property("resp").with.property("id", gid);
 		    ok();
 
-		    
-			//list apps, some filters
-			okta.getApplications({"filter" : "group.id+eq+\"" + gid + "\"", "limit" : 1}, function(d) {
+			//list apps, some filters, more then 1 app, it sends back as multiple responses
+			okta.getApplications({"filter" : "group.id eq \"" + gid + "\"", "limit" : 1}, function(d) {
 			    checking("listApp some args");
 			    d.should.have.property("success", true);
 			    d.should.have.property("resp");
 				var resp = d.resp;
 				resp.should.be.instanceof(Array);
+				resp[0].should.have.property("id", appID);
 			    ok();
 			});
 		});
