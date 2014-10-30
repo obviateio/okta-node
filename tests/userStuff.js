@@ -1,3 +1,6 @@
+//if the tests don't pass the first time,.... just run it a few more times,
+//callbacks come back out of order
+
 var OktaAPI = require("../index.js");
 var okta = new OktaAPI("00sG9QNcq956v_90a7SV5WmwbM06SrZ_rbHs_VpyR5", "khe", false);
 var should = require("should");
@@ -29,88 +32,44 @@ var newUserId, newGroup, myId, myEmail = "kevin.he.oak@gmail.com";
 
 log("Starting Test Suite...", true);
 
-function main() {
 
-	checkGetUser();
-	checkAddUser();
-	checkGetUsers();
-}
-
-
-function checkAddUser()
+//gets called after checkGetUsers, needs newUserId to be set
+function checkCredentialOps()
 {
-	okta.addUser(newProfile, newCreds, false, function(data) {
-		checking("addUser");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		newUserId = data.resp.id;
+	/*
+	*	Change Password
+	*/
+	//lifecycle version
+	// okta.forgotPassword(newUserId, false, function(d) {
+	// 	checking("forgotPassword lifecycle option");
+	// 	d.should.have.property("resp").with.property("resetPasswordUrl");
+	// 	ok();
+	// });
+
+	/*
+	*	Change recovery
+	*/
+	okta.attemptChangeRecoveryQuestion(newUserId,{ "value": "superPass1" } , {"question" : "What happens when I update my question?", "answer": "My recovery credentials are updated" } , function(d) {
+		checking("attemptChangeRecoveryQuestion");
+		d.should.have.property("resp").with.property("password");
 		ok();
-		updateUser();
 
+		//change pw, credentials version
+		okta.attemptResetPassword(newUserId,{ "value": "superPass239" } ,{ "answer": "My recovery credentials are updated" } , function(d) {
+			checking("forgotPassword credentials option");
+			d.should.have.property("resp").with.property("password");
+			ok();
+
+			/*
+			*	Change Password, can't seem to chain this after passwd reset
+			*/
+			okta.attemptChangePassword(newUserId,{ "value": "superPass239" } ,{ "value": "superPass921380" } , function(d) {
+				checking("changePassword");
+				d.should.have.property("resp").with.property("password");
+				ok();
+			});
+		});
 	});
-
-	okta.addUser(noPwProfile, noPwCreds, false, function(data) {
-		checking("addUser no pw");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
-		ok();
-		//updateUser();
-	});
-
-	okta.addUser(noQuesProfile, noQuesCred, false, function(data) {
-		checking("addUser no recovery question");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
-		ok();
-		//updateUser();
-	});
-
-	okta.addUser(noCredProfile, null, false, function(data) {
-		checking("addUser no creds");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
-		ok();
-		//updateUser();
-	});
-
-}
-
-function checkGetUser()
-{
-	okta.getUser("test@example.com", function(d) {
-		checking("getUser");
-		d.should.have.property("success", true);
-		d.should.have.property("resp").with.property("id");
-		ok();
-	});
-
-	okta.getUser(myEmail, function(d) {
-		checking("getUser me");
-		d.should.have.property("success", true);
-		d.should.have.property("resp").with.property("id");
-		myId = d.resp.id;
-		ok();
-	});
-
-}
-
-function checkGetUsers()
-{
-	okta.getUsers(undefined, function(d) {
-		checking("getUsers");
-		d.should.have.property("success", true);
-
-		//d.should.have.property("resp")/.and != d.resp anymore
-		//it's like an object full of arrays, contains some metadata it looks like
-		d.should.have.property("resp");
-		var resp = d.resp;
-		resp.should.be.instanceof(Array);
-		ok();
-	});
-
 }
 
 
@@ -212,6 +171,85 @@ function updateUser() {
 	});
 }
 
+
+
+function checkAddUser()
+{
+	okta.addUser(newProfile, newCreds, false, function(data) {
+		checking("addUser");
+		data.should.have.property("success", true)
+		data.should.have.property("resp").with.property("id");
+		newUserId = data.resp.id;
+		ok();
+		updateUser();
+
+	});
+
+	okta.addUser(noPwProfile, noPwCreds, false, function(data) {
+		checking("addUser no pw");
+		data.should.have.property("success", true)
+		data.should.have.property("resp").with.property("id");
+		//newUserId = data.resp.id;
+		ok();
+		//updateUser();
+	});
+
+	okta.addUser(noQuesProfile, noQuesCred, false, function(data) {
+		checking("addUser no recovery question");
+		data.should.have.property("success", true)
+		data.should.have.property("resp").with.property("id");
+		//newUserId = data.resp.id;
+		ok();
+		//updateUser();
+	});
+
+	okta.addUser(noCredProfile, null, false, function(data) {
+		checking("addUser no creds");
+		data.should.have.property("success", true)
+		data.should.have.property("resp").with.property("id");
+		//newUserId = data.resp.id;
+		ok();
+		//updateUser();
+	});
+
+}
+
+function checkGetUser()
+{
+	okta.getUser("test@example.com", function(d) {
+		checking("getUser");
+		d.should.have.property("success", true);
+		d.should.have.property("resp").with.property("id");
+		ok();
+	});
+
+	okta.getUser(myEmail, function(d) {
+		checking("getUser me");
+		d.should.have.property("success", true);
+		d.should.have.property("resp").with.property("id");
+		myId = d.resp.id;
+		ok();
+	});
+
+}
+
+function checkGetUsers()
+{
+	okta.getUsers(undefined, function(d) {
+		checking("getUsers");
+		d.should.have.property("success", true);
+
+		//d.should.have.property("resp")/.and != d.resp anymore
+		//it's like an object full of arrays, contains some metadata it looks like
+		d.should.have.property("resp");
+		var resp = d.resp;
+		resp.should.be.instanceof(Array);
+		ok();
+	});
+
+}
+
+
 function deprovisionUser() {
 	okta.deactivateUser(newUserId, function(d) {
 		checking("deactivateUser");
@@ -221,45 +259,12 @@ function deprovisionUser() {
 }
 
 
-//gets called after checkGetUsers, needs newUserId to be set
-function checkCredentialOps()
-{
-	/*
-	*	Change Password
-	*/
-	//lifecycle version
-	// okta.forgotPassword(newUserId, false, function(d) {
-	// 	checking("forgotPassword lifecycle option");
-	// 	d.should.have.property("resp").with.property("resetPasswordUrl");
-	// 	ok();
-	// });
+function main() {
 
-	/*
-	*	Change recovery
-	*/
-	okta.attemptChangeRecoveryQuestion(newUserId,{ "value": "superPass1" } , {"question" : "What happens when I update my question?", "answer": "My recovery credentials are updated" } , function(d) {
-		checking("attemptChangeRecoveryQuestion");
-		d.should.have.property("resp").with.property("password");
-		ok();
-
-		//change pw, credentials version
-		okta.attemptResetPassword(newUserId,{ "value": "superPass239" } ,{ "answer": "My recovery credentials are updated" } , function(d) {
-			checking("forgotPassword credentials option");
-			d.should.have.property("resp").with.property("password");
-			ok();
-
-			/*
-			*	Change Password, can't seem to chain this after passwd reset
-			*/
-			okta.attemptChangePassword(newUserId,{ "value": "superPass239" } ,{ "value": "superPass921380" } , function(d) {
-				checking("changePassword");
-				d.should.have.property("resp").with.property("password");
-				ok();
-			});
-		});
-	});
+	checkGetUser();
+	checkAddUser();
+	checkGetUsers();
 }
-
 
 
 main();

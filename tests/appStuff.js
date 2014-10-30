@@ -30,19 +30,81 @@ var newApp =
 log("Starting Test Suite...", true);
 
 
-okta.addApplication(newApp, function(d) {
-    checking("addApp");
-    //d.should.have.property("success", true);
-    //d.should.have.property("resp").with.property("id");
-    ok();
-});
+function checkAppOps()
+{
+	var newProfile = OktaAPI.Helpers.constructGroup("Test-" + now, "Test group from " + now);
+	var gid;
+
+
+	okta.addGroup(newProfile, function(d) {
+	    checking("addGroup");
+	    d.should.have.property("success", true);
+	    d.should.have.property("resp").with.property("id");
+	    ok();
+	    gid = d.resp.id;
+
+	    //checking assignment here to check the app listing
+		okta.assignApplicationToGroup(appID, gid, function(d) {
+		    checking("assignApplicationToGroup");
+		    d.should.have.property("success", true);
+		    d.should.have.property("resp").with.property("id", gid);
+		    ok();
+
+		    
+			//list apps, some filters
+			okta.getApplications({"filter" : "group.id+eq+\"" + gid + "\"", "limit" : 1}, function(d) {
+			    checking("listApp some args");
+			    d.should.have.property("success", true);
+			    d.should.have.property("resp");
+				var resp = d.resp;
+				resp.should.be.instanceof(Array);
+			    ok();
+			});
+		});
+	});
+
+
+	//works, can't figure out how to programatically add new apps
+	// okta.addApplication(newApp, function(d) {
+	//     checking("addApp");
+	//     d.should.have.property("success", true);
+	//     d.should.have.property("resp").with.property("id");
+	//     ok();
+	// });
+
+
+	
+	okta.getApplication(appID, function(d) {
+	    checking("getApp");
+	    d.should.have.property("success", true);
+	    d.should.have.property("resp").with.property("id");
+	    ok();
+	});
+
+	//list apps, no args
+	okta.getApplications(null, function(d) {
+	    checking("listApp no args");
+	    d.should.have.property("success", true);
+	    d.should.have.property("resp");
+		var resp = d.resp;
+		resp.should.be.instanceof(Array);
+	    ok();
+	});
+
+
+}
+
+
+function main()
+{
+	checkAppOps();
+}
+
+main();
 
 
 
-okta.getApplication(appID, function(d) {
-    checking("getApp");
-    d.should.have.property("success", true);
-    d.should.have.property("resp").with.property("id");
-    ok();
-});
+
+
+
 
