@@ -175,39 +175,39 @@ function updateUser() {
 
 function checkAddUser()
 {
-	okta.addUser(newProfile, newCreds, false, function(data) {
+	okta.addUser(newProfile, newCreds, false, function(d) {
 		checking("addUser");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		newUserId = data.resp.id;
+		d.should.have.property("success", true)
+		d.should.have.property("resp").with.property("id");
+		newUserId = d.resp.id;
 		ok();
 		updateUser();
 
 	});
 
-	okta.addUser(noPwProfile, noPwCreds, false, function(data) {
+	okta.addUser(noPwProfile, noPwCreds, false, function(d) {
 		checking("addUser no pw");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
+		d.should.have.property("success", true)
+		d.should.have.property("resp").with.property("id");
+		//newUserId = d.resp.id;
 		ok();
 		//updateUser();
 	});
 
-	okta.addUser(noQuesProfile, noQuesCred, false, function(data) {
+	okta.addUser(noQuesProfile, noQuesCred, false, function(d) {
 		checking("addUser no recovery question");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
+		d.should.have.property("success", true)
+		d.should.have.property("resp").with.property("id");
+		//newUserId = d.resp.id;
 		ok();
 		//updateUser();
 	});
 
-	okta.addUser(noCredProfile, null, false, function(data) {
+	okta.addUser(noCredProfile, null, false, function(d) {
 		checking("addUser no creds");
-		data.should.have.property("success", true)
-		data.should.have.property("resp").with.property("id");
-		//newUserId = data.resp.id;
+		d.should.have.property("success", true)
+		d.should.have.property("resp").with.property("id");
+		//newUserId = d.resp.id;
 		ok();
 		//updateUser();
 	});
