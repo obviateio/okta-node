@@ -1,5 +1,5 @@
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("00sG9QNcq956v_90a7SV5WmwbM06SrZ_rbHs_VpyR5", "khe", false);
+var okta = new OktaAPI("", "", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
@@ -18,7 +18,7 @@ log("Starting Test Suite...", true);
 
 var sessionId;
 
-okta.createSession("kevin.he@okta.com", "160891Preview", null, function(d) {
+okta.createSession("", "", null, function(d) {
     checking("createSession");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
@@ -27,7 +27,7 @@ okta.createSession("kevin.he@okta.com", "160891Preview", null, function(d) {
     doThingsWithSession();
 });
 
-okta.createSession("kevin.he@okta.com", "160891Preview", {'additionalFields' : 'cookieToken'}, function(d) {
+okta.createSession("", "", {'additionalFields' : 'cookieToken'}, function(d) {
     checking("createSession with one time token");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");

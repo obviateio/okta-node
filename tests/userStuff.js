@@ -1,8 +1,9 @@
 //if the tests don't pass the first time,.... just run it a few more times,
 //callbacks come back out of order
+//these tests are not properly chained together
 
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("00sG9QNcq956v_90a7SV5WmwbM06SrZ_rbHs_VpyR5", "khe", false);
+var okta = new OktaAPI("", "", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
@@ -28,7 +29,7 @@ var noQuesCred = OktaAPI.Helpers.constructCredentials("superPass1", null, null )
 var noCredProfile = OktaAPI.Helpers.constructProfile("incomp", "nocreds", "incompnocreds+" + now + "@test.com");
 //var creds3 = OktaAPI.Helpers.constructCredentials("test", null, null );
 
-var newUserId, newGroup, myId, myEmail = "kevin.he.oak@gmail.com";
+var newUserId, newGroup, myId, myEmail = "test@test.com";
 
 log("Starting Test Suite...", true);
 
@@ -235,7 +236,7 @@ function checkGetUser()
 
 function checkGetUsers()
 {
-	okta.getUsers(undefined, function(d) {
+	okta.getUsers({'q': "tmcgee+" + now + "@test.com", 'limit' : 1 }, function(d) {
 		checking("getUsers");
 		d.should.have.property("success", true);
 
