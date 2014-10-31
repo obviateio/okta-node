@@ -1,3 +1,9 @@
+/*
+*	Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*	Only tests operaations done on events. Should call all the functions at 
+*	least once.
+*
+*/
 
 
 
@@ -18,6 +24,9 @@ var ok = function() {
 
 function main()
 {
+	/*
+	*	get all events for your org, can return alot of info
+	*/
 	okta.getEvents({"startDate" : "2014-10-30T00:00:00.000Z", "limit" : 5}, function(d) {
 	    checking("getEvents");
 	    d.should.have.property("success", true);

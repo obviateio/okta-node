@@ -1,11 +1,13 @@
 /*
+*	Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*	Only tests operaations done on Apps.
 *	Tests are chained, no way out of it that I can think of right now
 *
 */
 
 
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("00sG9QNcq956v_90a7SV5WmwbM06SrZ_rbHs_VpyR5", "khe", false);
+var okta = new OktaAPI("", "", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
