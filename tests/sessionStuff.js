@@ -31,8 +31,8 @@ var sessionId;
 /*
 *   creates a session
 */
-okta.createSession(username, password, null, function(d) {
-    checking("createSession");
+okta.sessions.create(username, password, null, function(d) {
+    checking("sessions.create");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
     sessionId = d.resp.id;
@@ -43,8 +43,8 @@ okta.createSession(username, password, null, function(d) {
 /*
 *   creates a session, with a token
 */
-okta.createSession(username, password, {'additionalFields' : 'cookieToken'}, function(d) {
-    checking("createSession with one time token");
+okta.sessions.create(username, password, {'additionalFields' : 'cookieToken'}, function(d) {
+    checking("sessions.create with one time token");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
     //sessionId = d.resp.id;
@@ -56,8 +56,8 @@ function doThingsWithSession() {
     /*
     *   validates a session
     */
-    okta.validateSession(sessionId, function(d) {
-        checking("validateSession");
+    okta.sessions.validate(sessionId, function(d) {
+        checking("sessions.validate");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id", sessionId);
         ok();
@@ -66,8 +66,8 @@ function doThingsWithSession() {
     /*
     *   extends a session
     */
-    okta.extendSession(sessionId, function(d) {
-        checking("extendSession");
+    okta.sessions.extend(sessionId, function(d) {
+        checking("sessions.extend");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id", sessionId);
         ok();
@@ -79,8 +79,8 @@ setTimeout(function() {
     /*
     *   closes a session
     */
-    okta.closeSession(sessionId, function(d) {
-        checking("closeSession");
+    okta.sessions.close(sessionId, function(d) {
+        checking("sessions.close");
         d.should.have.property("success", true);
         ok();
     });

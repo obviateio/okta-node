@@ -21,16 +21,16 @@ var ok = function() {
 }
 
 var now = new Date().valueOf();
-var newProfile = OktaAPI.Helpers.constructProfile("Timothy", "McGee", "tmcgee+" + now + "@test.com");
-var newCreds = OktaAPI.Helpers.constructCredentials("superPass1", "What is my favorite book?", "Deep Six");
+var newProfile = okta.users.helpers.constructProfile("Timothy", "McGee", "tmcgee+" + now + "@test.com");
+var newCreds = okta.users.helpers.constructCredentials("superPass1", "What is my favorite book?", "Deep Six");
 
-var noPwProfile = OktaAPI.Helpers.constructProfile("incomp", "nopw", "incompnopw+" + now + "@test.com");
-var noPwCreds = OktaAPI.Helpers.constructCredentials("", "testetestest", "Deep Six");
+var noPwProfile = okta.users.helpers.constructProfile("incomp", "nopw", "incompnopw+" + now + "@test.com");
+var noPwCreds = okta.users.helpers.constructCredentials("", "testetestest", "Deep Six");
 
-var noQuesProfile = OktaAPI.Helpers.constructProfile("incomp", "noques", "incompnoques+" + now + "@test.com");
-var noQuesCred = OktaAPI.Helpers.constructCredentials("superPass1", "", "" );
+var noQuesProfile = okta.users.helpers.constructProfile("incomp", "noques", "incompnoques+" + now + "@test.com");
+var noQuesCred = okta.users.helpers.constructCredentials("superPass1", "", "" );
 
-var noCredProfile = OktaAPI.Helpers.constructProfile("incomp", "nocreds", "incompnocreds+" + now + "@test.com");
+var noCredProfile = okta.users.helpers.constructProfile("incomp", "nocreds", "incompnocreds+" + now + "@test.com");
 //var creds3 = OktaAPI.Helpers.constructCredentials("test", null, null );
 
 var newUserId, newGroup, myId, myEmail = "test@test.com";
@@ -43,8 +43,8 @@ function deprovisionUser() {
 	/*
 	*	deativate a user
 	*/
-	okta.deactivateUser(newUserId, function(d) {
-		checking("deactivateUser");
+	okta.users.deactivate(newUserId, function(d) {
+		checking("users.deactivate");
 		d.should.have.property("success", true);
 		ok();
 	});
@@ -58,24 +58,24 @@ function checkPasswordOp()
 	/*
 	*	deativate a user
 	*/
-	okta.resetPassword(newUserId, false, function(d) {
-		checking("resetPassword");
+	okta.users.resetPassword(newUserId, false, function(d) {
+		checking("users.resetPassword");
 		d.should.have.property("resp").with.property("resetPasswordUrl");
 			ok();
 
 		/*
 		*	expires a password, sets it a temp password
 		*/
-		okta.expirePassword(newUserId, true, function(d) {
-			checking("expirePassword give temp password");
+		okta.users.expirePassword(newUserId, true, function(d) {
+			checking("users.expirePassword give temp password");
 			d.should.have.property("resp").with.property("tempPassword");
 			ok();
 
 			/*
 			*	expire password, user has to change pw on next login
 			*/
-			okta.expirePassword(newUserId, null, function(d) {
-				checking("expirePassword no params");
+			okta.users.expirePassword(newUserId, null, function(d) {
+				checking("users.expirePassword no params");
 				d.should.have.property("resp");
 				ok();
 
@@ -103,22 +103,22 @@ function checkCredentialOps()
 	/*
 	*	Change recovery
 	*/
-	okta.attemptChangeRecoveryQuestion(newUserId,{ "value": "superPass1" } , {"question" : "What happens when I update my question?", "answer": "My recovery credentials are updated" } , function(d) {
-		checking("attemptChangeRecoveryQuestion");
+	okta.users.changeRecoveryQuestion(newUserId,{ "value": "superPass1" } , {"question" : "What happens when I update my question?", "answer": "My recovery credentials are updated" } , function(d) {
+		checking("users.changeRecoveryQuestion");
 		d.should.have.property("resp").with.property("password");
 		ok();
 
 		//change pw, credentials version
-		okta.attemptResetPassword(newUserId,{ "value": "superPass239" } ,{ "answer": "My recovery credentials are updated" } , function(d) {
-			checking("forgotPassword credentials option");
+		okta.users.forgotPasswordRecovery(newUserId,{ "value": "superPass239" } ,{ "answer": "My recovery credentials are updated" } , function(d) {
+			checking("users.forgotPasswordRecovery");
 			d.should.have.property("resp").with.property("password");
 			ok();
 
 			/*
 			*	Change Password
 			*/
-			okta.attemptChangePassword(newUserId,{ "value": "superPass239" } ,{ "value": "superPass921380" } , function(d) {
-				checking("changePassword");
+			okta.users.changePassword(newUserId,{ "value": "superPass239" } ,{ "value": "superPass921380" } , function(d) {
+				checking("users.changePassword");
 				d.should.have.property("resp").with.property("password");
 				ok();
 
@@ -134,8 +134,8 @@ function checkLifecycleOps()
 	/*
 	*	Activates a user
 	*/
-	okta.activateUser(newUserId, false, function(d) {
-		checking("activateUser");
+	okta.users.activate(newUserId, false, function(d) {
+		checking("users.activate");
 		d.should.have.property("success", true);
 		d.should.have.property("resp").with.property("activationUrl").startWith("https://");
 		ok();
@@ -155,8 +155,8 @@ function checkLifecycleOps()
 	/*
 	*	Unlocks a user
 	*/
-	okta.unlockUser(newUserId, function(d) {
-		checking("unlockUser");
+	okta.users.unlock(newUserId, function(d) {
+		checking("users.unlock");
 		d.should.have.property("success", false);
 		ok();
 	});
@@ -164,8 +164,8 @@ function checkLifecycleOps()
 	/*
 	*	resets the fators for a user
 	*/
-	okta.resetFactors(newUserId, function(d) {
-		checking("resetFactors");
+	okta.users.resetFactors(newUserId, function(d) {
+		checking("users.resetFactors");
 		d.should.have.property("resp");
 		ok();
 	});
@@ -177,8 +177,8 @@ function checkRelatedResources()
 	/*
 	*	Gets links to all apps assigned to a user
 	*/
-	okta.getAppLinks(newUserId, function(d) {
-		checking("getAppLinks");
+	okta.users.getApps(newUserId, function(d) {
+		checking("users.getApps");
 		d.should.have.property("success", true);
 		var resp = d.resp;
 		resp.should.be.instanceof(Array);
@@ -188,8 +188,8 @@ function checkRelatedResources()
 	/*
 	*	Gets groups that user is a member of
 	*/
-	okta.getMemberGroups(newUserId, function(d) {
-		checking("getMemberGroups");
+	okta.users.getGroups(newUserId, function(d) {
+		checking("users.getGroups");
 		d.should.have.property("success", true);
 		var resp = d.resp;
 		resp.should.be.instanceof(Array);
@@ -208,8 +208,8 @@ function updateUser() {
 	/*
 	*	Update user with whole profile
 	*/
-	okta.updateUser(newUserId, newProfile, null, function(d) {
-		checking("updateUser");
+	okta.users.update(newUserId, newProfile, null, function(d) {
+		checking("users.update");
 		d.should.have.property("success", true);
 		d.should.have.property("resp").with.property("profile").with.property("mobilePhone", "123-456-7890");
 		ok();
@@ -218,8 +218,8 @@ function updateUser() {
 	/*
 	*	Update user with whole profile
 	*/
-	okta.updateUserPartial(newUserId, {mobilePhone: "321-654-0987"}, null, function(d) {
-		checking("updateUserPartial");
+	okta.users.updatePartial(newUserId, {mobilePhone: "321-654-0987"}, null, function(d) {
+		checking("users.updatePartial");
 		d.should.have.property("success", true);
 		var resp = d.resp;
 		resp.should.have.property("profile").with.property("mobilePhone", "321-654-0987");
@@ -230,8 +230,8 @@ function updateUser() {
 	/*
 	*	Update user with partial credentials, no recovery question
 	*/
-	okta.updateUserPartial(newUserId, null, noQuesCred, function(d) {
-		checking("updateUserPartial, no Questions Cred");
+	okta.users.updatePartial(newUserId, null, noQuesCred, function(d) {
+		checking("users.updatePartial, no Questions Cred");
 		d.should.have.property("success", true);
 		var resp = d.resp;
 		resp.should.have.property("credentials").with.property("password");
@@ -242,8 +242,8 @@ function updateUser() {
 	/*
 	*	Update user with partial credentials, no passwords
 	*/
-	okta.updateUserPartial(newUserId, null, noPwCreds, function(d) {
-		checking("updateUserPartial, no pw Cred");
+	okta.users.updatePartial(newUserId, null, noPwCreds, function(d) {
+		checking("users.updatePartial, no pw Cred");
 		d.should.have.property("success", true);
 		var resp = d.resp;
 		resp.should.have.property("credentials").with.property("recovery_question").with.property("question" , "testetestest");
@@ -296,8 +296,8 @@ function checkAddUser()
 	/*
 	*	Add user normal
 	*/
-	okta.addUser(newProfile, newCreds, false, function(d) {
-		checking("addUser");
+	okta.users.add(newProfile, newCreds, false, function(d) {
+		checking("users.add");
 		d.should.have.property("success", true)
 		d.should.have.property("resp").with.property("id");
 		newUserId = d.resp.id;
@@ -310,8 +310,8 @@ function checkAddUser()
 	/*
 	*	Add user , with no pw
 	*/
-	okta.addUser(noPwProfile, noPwCreds, false, function(d) {
-		checking("addUser no pw");
+	okta.users.add(noPwProfile, noPwCreds, false, function(d) {
+		checking("users.add no pw");
 		d.should.have.property("success", true)
 		d.should.have.property("resp").with.property("id");
 		ok();
@@ -320,8 +320,8 @@ function checkAddUser()
 	/*
 	*	Add user , with no recovery question
 	*/
-	okta.addUser(noQuesProfile, noQuesCred, false, function(d) {
-		checking("addUser no recovery question");
+	okta.users.add(noQuesProfile, noQuesCred, false, function(d) {
+		checking("users.add no recovery question");
 		d.should.have.property("success", true)
 		d.should.have.property("resp").with.property("id");
 		ok();
@@ -330,8 +330,8 @@ function checkAddUser()
 	/*
 	*	Add user , with no credentials at all
 	*/
-	okta.addUser(noCredProfile, null, false, function(d) {
-		checking("addUser no creds");
+	okta.users.add(noCredProfile, null, false, function(d) {
+		checking("users.add no creds");
 		d.should.have.property("success", true)
 		d.should.have.property("resp").with.property("id");
 		ok();
@@ -344,8 +344,8 @@ function checkGetUser()
 	/*
 	*	gets a user with their id, login or shortname
 	*/
-	okta.getUser("test@example.com", function(d) {
-		checking("getUser");
+	okta.users.get("test@example.com", function(d) {
+		checking("okta.users.get");
 		d.should.have.property("success", true);
 		d.should.have.property("resp").with.property("id");
 		ok();

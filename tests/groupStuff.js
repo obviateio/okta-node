@@ -29,8 +29,8 @@ log("Starting Test Suite...", true);
 /*
 *   add a new group 
 */
-okta.addGroup(newProfile, function(d) {
-    checking("addGroup");
+okta.groups.add(newProfile, function(d) {
+    checking("groups.add");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
     ok();
@@ -45,8 +45,8 @@ function deleteEveryThing() {
     /*
     *   deletes a group 
     */
-    okta.deleteGroup(gid, function(d) {
-        checking("deleteGroup");
+    okta.groups.delete(gid, function(d) {
+        checking("groups.delete");
         d.should.have.property("success", true);
         ok();
     });
@@ -57,8 +57,8 @@ function doThingsWithGroup() {
     /*
     *   gets a group by it's id
     */
-    okta.getGroup(gid, function(d) {
-        checking("getGroup");
+    okta.groups.get(gid, function(d) {
+        checking("groups.get");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id");
         ok();
@@ -67,8 +67,8 @@ function doThingsWithGroup() {
     /*
     *   updates a group with a new profile
     */
-    okta.updateGroup(gid, newProfile, function(d) {
-        checking("updateGroup");
+    okta.groups.update(gid, newProfile, function(d) {
+        checking("groups.update");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id");
         ok();
@@ -77,16 +77,16 @@ function doThingsWithGroup() {
     /*
     *   adds a user to a group by group id and user id
     */
-    okta.addUserToGroup(gid, uid, function(d) {
-        checking("addUserToGroup");
+    okta.groups.addUser(gid, uid, function(d) {
+        checking("groups.addUser");
         d.should.have.property("success", true);
         ok();
 
         /*
         *   removes a user to a group by group id and user id
         */
-        okta.removeUserFromGroup(gid, uid, function(d) {
-            checking("removeUserFromGroup");
+        okta.groups.removeUser(gid, uid, function(d) {
+            checking("groups.removeUser");
             d.should.have.property("success", true);
             ok();
         });
@@ -95,8 +95,8 @@ function doThingsWithGroup() {
     /*
     *   gets all users in a group by group id
     */
-    okta.getUsersInGroup(gid,null, function(d) {
-        checking("getUsersInGroup");
+    okta.groups.getUsers(gid,null, function(d) {
+        checking("groups.getUsers");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -105,8 +105,8 @@ function doThingsWithGroup() {
     /*
     *   gets all users in a group by group id, with a filter
     */
-    okta.getUsersInGroup(gid, {'limit' : 20}, function(d) {
-        checking("getUsersInGroup with limit");
+    okta.groups.getUsers(gid, {'limit' : 20}, function(d) {
+        checking("groups.getUsers with limit");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -115,8 +115,8 @@ function doThingsWithGroup() {
     /*
     *   gets all groups
     */
-    okta.getGroups(null, function(d) {
-        checking("getGroups");
+    okta.groups.list(null, function(d) {
+        checking("groups.get");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -125,8 +125,8 @@ function doThingsWithGroup() {
     /*
     *   gets all groups, with filter 
     */
-    okta.getGroups({'q': "Test-" + now, 'limit' : 1 }, function(d) {
-        checking("getGroups with query");
+    okta.groups.list({'q': "Test-" + now, 'limit' : 1 }, function(d) {
+        checking("groups.list with query");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -135,8 +135,8 @@ function doThingsWithGroup() {
     /*
     *   gets all apps assigned to group
     */
-    okta.getAppsForGroup(gid, null, function(d) {
-        checking("getAppsForGroup");
+    okta.groups.getApps(gid, null, function(d) {
+        checking("groups.getApps");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -147,7 +147,7 @@ function getUser() {
     /*
     *   gets a user to put in a group
     */
-    okta.getUser("test@example.com", function(d) {
+    okta.users.get("test@example.com", function(d) {
         if (!d.success) {
             throw new Error("Failed to get user from Okta: " + d.error);
         } else if (d.resp.hasOwnProperty("errorCode")) {

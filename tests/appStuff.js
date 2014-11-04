@@ -23,8 +23,10 @@ var ok = function() {
 
 var now = new Date().valueOf();
 var appId, newUserId, gid1, gid2;
-var newProfile = OktaAPI.Helpers.constructProfile("Timothy", "McGee", "tmcgee+" + now + "@test.com");
-var newCreds = OktaAPI.Helpers.constructCredentials("superPass1", "What is my favorite book?", "Deep Six");
+var newProfile = okta.users.helpers.constructProfile("Timothy", "McGee", "tmcgee+" + now + "@test.com");
+var newCreds = okta.users.helpers.constructCredentials("superPass1", "What is my favorite book?", "Deep Six");
+var appModel = okta.apps.helpers.constructAppGroupModel();
+var appModelOldWay = OktaAPI.Helpers.constructAppGroupModel();
 
 /*
 *	a bunch of profiles, grabbed these from Okta docs
@@ -97,7 +99,7 @@ function cleanUpGroups()
     /*
     *   deletes a group 
     */
-	okta.deleteGroup(gid1, function(d) {
+	okta.groups.delete(gid1, function(d) {
         //checking("deleteGroup");
         d.should.have.property("success", true);
         ok();
@@ -106,7 +108,7 @@ function cleanUpGroups()
     /*
     *   deletes a group 
     */
-    okta.deleteGroup(gid2, function(d) {
+    okta.groups.delete(gid2, function(d) {
         //checking("deleteGroup");
         d.should.have.property("success", true);
         ok();
@@ -120,8 +122,8 @@ function checkDeleteOp()
     /*
     *   deletes an app 
     */
-	okta.deleteApplication(appId, function(d) {
-	    checking("deleteApplication");
+	okta.apps.delete(appId, function(d) {
+	    checking("apps.delete");
 	    d.should.have.property("success", true);
 
 	    ok();
@@ -136,8 +138,8 @@ function checkLifecycleOps()
     *   deactivates an App
     */
 	//testing update app, assumes addApplication was run previously
-	okta.deactivateApplication(appId, function(d) {
-	    checking("deactivateApplication");
+	okta.apps.deactivate(appId, function(d) {
+	    checking("apps.deactivate");
 	    d.should.have.property("success", true);
 
 	    ok();
@@ -145,14 +147,14 @@ function checkLifecycleOps()
 	    /*
 	    *   activates a group 
 	    */
-		okta.activateApplication(appId, function(d) {
-		    checking("activateApplication");
+		okta.apps.activate(appId, function(d) {
+		    checking("apps.activate");
 		    d.should.have.property("success", true);
 
 		    ok();
 
 		    //deactivating again to delete
-			okta.deactivateApplication(appId, function(d) {
+			okta.apps.deactivate(appId, function(d) {
 			    checkDeleteOp();
 			});
 		});
@@ -171,8 +173,8 @@ function checkAppGroupOps()
     /*
     *   adds a group 
     */
-	okta.addGroup(newProfile, function(d) {
-	    checking("addGroup");
+	okta.groups.add(newProfile, function(d) {
+	    checking("groups.add");
 	    d.should.have.property("success", true);
 	    d.should.have.property("resp").with.property("id");
 	    ok();
@@ -183,17 +185,17 @@ function checkAppGroupOps()
 		*   assigns an app to a group
 		*/
 	    //checking assignment here to check the app listing
-		okta.assignApplicationToGroup(appId, gid2, function(d) {
-		    checking("assignApplicationToGroup");
+		okta.apps.assignGroup(appId, gid2, function(d) {
+		    checking("apps.assignGroup");
 		    d.should.have.property("success", true);
 		    d.should.have.property("resp").with.property("id", gid2);
 		    ok();
 
 		    /*
-		    *   deletes a group 
+		    *   gets groups that was just assigned
 		    */
-			okta.getGroupAssignedToApplication(appId, gid2, function(d) {
-			    checking("getGroupAssignedToApplication");
+			okta.apps.getAssignedGroup(appId, gid2, function(d) {
+			    checking("apps.getAssignedGroup");
 			    d.should.have.property("success", true);
 			    d.should.have.property("resp").with.property("id", gid2);
 			    ok();
@@ -201,8 +203,8 @@ function checkAppGroupOps()
 			    /*
 			    *   get groups assigned to an application, with filter
 			    */
-				okta.getGroupsAssignedToApplication(appId, {"limit" : 1}, function(d) {
-				    checking("getGroupsAssignedToApplication");
+				okta.apps.listGroupsAssigned(appId, {"limit" : 1}, function(d) {
+				    checking("apps.getAssignedGroup");
 				    d.should.have.property("success", true);
 				    ok();
 
@@ -210,8 +212,8 @@ function checkAppGroupOps()
 				    *   remove group assigned to an application
 				    */
 				    //remove the first group
-					okta.removeGroupFromApplication(appId, gid1, function(d) {
-					    checking("removeGroupFromApplication");
+					okta.apps.removeGroup(appId, gid1, function(d) {
+					    checking("apps.removeGroup");
 					    d.should.have.property("success", true);
 					    ok();
 
@@ -219,8 +221,8 @@ function checkAppGroupOps()
 					    *   remove group assigned to an application
 					    */
 					    //remove second group
-						okta.removeGroupFromApplication(appId, gid2, function(d) {
-						    checking("removeGroupFromApplication");
+						okta.apps.removeGroup(appId, gid2, function(d) {
+						    checking("apps.removeGroup");
 						    d.should.have.property("success", true);
 						    ok();
 
@@ -242,8 +244,8 @@ function checkAppUserOps()
     /*
     *   adds a user 
 	*/
-	okta.addUser(newProfile, newCreds, false, function(d) {
-		checking("addUser");
+	okta.users.add(newProfile, newCreds, false, function(d) {
+		checking("users.add");
 		d.should.have.property("success", true);
 		d.should.have.property("resp").with.property("id");
 		newUserId = d.resp.id;
@@ -253,8 +255,8 @@ function checkAppUserOps()
 	    *   assigns a user to an Application, *NOTE* appUserProfile != response you get from adding a user 
 		*/
 		appUserProfile.id = newUserId;
-		okta.assignUserToApplication(appId, appUserProfile, function(d) {
-			checking("assignUserToApplication");
+		okta.apps.assignUser(appId, appUserProfile, function(d) {
+			checking("users.assignUser");
 			d.should.have.property("success", true);
 			d.should.have.property("resp").with.property("id", newUserId);
 			ok();
@@ -262,8 +264,8 @@ function checkAppUserOps()
 		    /*
 		    *   gets a user that was assigned to an application
 			*/
-			okta.getAssignedUserForApplication(appId, newUserId, function(d) {
-				checking("getAssignedUserForApplication");
+			okta.apps.getAssignedUser(appId, newUserId, function(d) {
+				checking("apps.getAssignedUser");
 				d.should.have.property("success", true);
 				d.should.have.property("resp").with.property("id", newUserId);
 				ok();
@@ -272,8 +274,8 @@ function checkAppUserOps()
 			    /*
 			    *   gets all users assigned to an app
 				*/
-				okta.getUsersAssignedToApplication(appId, function(d) {
-					checking("getUsersAssignedToApplication");
+				okta.apps.listUsersAssigned(appId, function(d) {
+					checking("apps.listUsersAssigned");
 					d.should.have.property("success", true);
 					var resp = d.resp;
 					resp.should.be.instanceof(Array);
@@ -284,8 +286,8 @@ function checkAppUserOps()
 				    /*
 				    *   updates the credentials for an application
 					*/
-					okta.updateCredsForApplication(appId ,newUserId ,newAppCred , function(d) {
-						checking("updateCredsForApplication");
+					okta.apps.updateAppCredsForUser(appId ,newUserId ,newAppCred , function(d) {
+						checking("apps.updateAppCredsForUser");
 						d.should.have.property("success", true);
 						var resp = d.resp;
 						d.should.have.property("resp").with.property("id", newUserId);
@@ -295,8 +297,8 @@ function checkAppUserOps()
 					    /*
 					    *   updates the profile for an application
 						*/
-						okta.updateProfileForApplication(appId ,newUserId ,newAppCred , function(d) {
-							checking("updateProfileForApplication");
+						okta.apps.updateAppProfileForUser(appId ,newUserId ,newAppCred , function(d) {
+							checking("apps.updateAppProfileForUser");
 							d.should.have.property("success", true);
 							var resp = d.resp;
 							d.should.have.property("resp").with.property("id", newUserId);
@@ -306,8 +308,8 @@ function checkAppUserOps()
 						    /*
 						    *   removes a user from an application
 							*/
-							okta.removeUserFromApplication(appId ,newUserId , function(d) {
-								checking("removeUserFromApplication");
+							okta.apps.removeUser(appId ,newUserId , function(d) {
+								checking("apps.removeUser");
 								d.should.have.property("success", true);
 								ok();
 
@@ -332,8 +334,8 @@ function checkAppOps()
     *   creates a group to test with
 	*/
 	//need this to assign apps to groups
-	okta.addGroup(newProfile, function(d) {
-	    checking("addGroup");
+	okta.groups.add(newProfile, function(d) {
+	    checking("groups.add");
 	    d.should.have.property("success", true);
 	    d.should.have.property("resp").with.property("id");
 	    ok();
@@ -343,8 +345,8 @@ function checkAppOps()
 	    *   assigns the group to an app
 		*/
 	    //checking assignment here to check the app listing
-		okta.assignApplicationToGroup(appId, gid1, function(d) {
-		    checking("assignApplicationToGroup");
+		okta.apps.assignGroup(appId, gid1, function(d) {
+		    checking("apps.assignGroup");
 		    d.should.have.property("success", true);
 		    d.should.have.property("resp").with.property("id", gid1);
 		    ok();
@@ -353,8 +355,8 @@ function checkAppOps()
 		    *   gets all applications that matches the filter
 			*/
 			//list apps, some filters, more then 1 app, it sends back as multiple responses
-			okta.getApplications({"filter" : "group.id eq \"" + gid1 + "\"", "limit" : 1}, function(d) {
-			    checking("listApp some args");
+			okta.apps.list({"filter" : "group.id eq \"" + gid1 + "\"", "limit" : 1}, function(d) {
+			    checking("apps.list some args");
 			    d.should.have.property("success", true);
 			    d.should.have.property("resp");
 				var resp = d.resp;
@@ -373,8 +375,8 @@ function checkAppOps()
     /*
     *   get profile for an application
 	*/
-	okta.getApplication(appId, function(d) {
-	    checking("getApp");
+	okta.apps.get(appId, function(d) {
+	    checking("apps.get");
 	    d.should.have.property("success", true);
 	    d.should.have.property("resp").with.property("id");
 	    ok();
@@ -384,8 +386,8 @@ function checkAppOps()
     *   get profile for an application
 	*/
 	//list apps, no args
-	okta.getApplications(null, function(d) {
-	    checking("listApp no args");
+	okta.apps.list(null, function(d) {
+	    checking("apps.list no args");
 	    d.should.have.property("success", true);
 	    d.should.have.property("resp");
 		var resp = d.resp;
@@ -398,8 +400,8 @@ function checkAppOps()
     *   updates the profile for an application
 	*/
 	//testing update app, assumes addApplication was run previously
-	okta.updateApplication(appId, appProfile, function(d) {
-	    checking("updateApplication");
+	okta.apps.update(appId, appProfile, function(d) {
+	    checking("apps.update");
 	    d.should.have.property("success", true);
 	    var resp = d.resp;
 	    for(var attr in appProfile)
@@ -420,8 +422,8 @@ function checkAddOp()
     /*
     *   adds an application
 	*/
-	okta.addApplication(appProfile, function(d) {
-	    checking("addApp");
+	okta.apps.add(appProfile, function(d) {
+	    checking("apps.add");
 	    d.should.have.property("success", true);
 	    d.should.have.property("resp").with.property("id");
 		appId = d.resp.id;
