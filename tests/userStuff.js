@@ -258,6 +258,38 @@ function updateUser() {
 }
 
 
+function checkGetUsers()
+{
+	/*
+	*	gets user with filters
+	*/
+	okta.getUsers({'q': "tmcgee+" + now}, function(d) {
+		checking("getUsers");
+		d.should.have.property("success", true);
+
+		//d.should.have.property("resp")/.and != d.resp 
+		//it's like an object full of arrays, contains some metadata it looks like
+		d.should.have.property("resp");
+		var resp = d.resp;
+		resp.should.be.instanceof(Array);
+		ok();
+		//console.log(require('util').inspect(resp));
+
+		okta.users.list({'q': "tmcgee+" + now}, function(d) {
+			checking("okta.users.list");
+			d.should.have.property("success", true);
+			//d.should.have.property("resp")/.and != d.resp 
+			//it's like an object full of arrays, contains some metadata it looks like
+			d.should.have.property("resp");
+			var newResp = d.resp;
+			//comparison should work if no values in response profile is null
+			//resp.should.equal(resp);
+			ok();
+		});
+	});
+
+}
+
 
 function checkAddUser()
 {
@@ -271,6 +303,7 @@ function checkAddUser()
 		newUserId = d.resp.id;
 		ok();
 		updateUser();
+		checkGetUsers();
 
 	});
 
@@ -328,31 +361,11 @@ function checkGetUser()
 
 }
 
-function checkGetUsers()
-{
-	/*
-	*	gets user with filters
-	*/
-	okta.getUsers({'q': "tmcgee+" + now + "@test.com", 'limit' : 1 }, function(d) {
-		checking("getUsers");
-		d.should.have.property("success", true);
-
-		//d.should.have.property("resp")/.and != d.resp 
-		//it's like an object full of arrays, contains some metadata it looks like
-		d.should.have.property("resp");
-		var resp = d.resp;
-		resp.should.be.instanceof(Array);
-		ok();
-	});
-
-}
-
 
 function main() {
 
 	checkGetUser();
 	checkAddUser();
-	checkGetUsers();
 }
 
 

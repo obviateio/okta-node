@@ -13,7 +13,7 @@ This document will refer to itself as "this API" and the Okta API as simply, "Ok
 
 # Usage
 To get started, you MUST obtain an API key from Okta's Support Team.
-You will also need to familiarize yourself with how Okta responds to programmatic requests. You can do so [here](https://github.com/okta/api/tree/master/docs/endpoints).
+You will also need to familiarize yourself with how Okta responds to programmatic requests. You can do so [here](http://developer.okta.com/docs/getting_started/design_principles.html).
 This API is for Okta API version 1.
 
 ```node

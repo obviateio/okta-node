@@ -3,7 +3,8 @@
     "description": "Interfaces with the Okta API via NodeJS",
     "author": "Josh Johnson <jjohnson@okta.com>",
     "dependencies": {
-        "request": "2.29.0"
+        "request": "2.29.0",
+        "check-types" : "1.4.0"
     },
     "repository": {
         "type": "git",
