@@ -27,13 +27,13 @@ function main()
 	/*
 	*	get all events for your org, can return alot of info
 	*/
-	okta.events.list({"startDate" : "2014-10-30T00:00:00.000Z", "limit" : 5}, function(d) {
-	    checking("getEvents");
-	    d.should.have.property("success", true);
-	    console.log(d.resp);
-	    ok();
+	// okta.events.list({"startDate" : "2014-10-30T00:00:00.000Z", "limit" : 5}, function(d) {
+	//     checking("getEvents");
+	//     d.should.have.property("success", true);
+	//     console.log(d.resp);
+	//     ok();
 
-	});
+	// });
 	okta.events.list({"startDate" : "2014-10-30T00:00:00.000Z", "limit" : 5}, false, function(d) {
 	    checking("getEvents");
 	    d.should.have.property("success", true);

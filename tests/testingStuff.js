@@ -1,6 +1,7 @@
 /*
 *	Tests for checking misc. things, backwards compatibility, aliasing, etc.
 *
+*	not up to date with new design
 */
 
 

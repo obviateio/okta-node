@@ -263,8 +263,8 @@ function checkGetUsers()
 	/*
 	*	gets user with filters
 	*/
-	okta.getUsers({'q': "tmcgee+" + now}, function(d) {
-		checking("getUsers");
+	okta.users.list({'q': "tmcgee+" + now}, function(d) {
+		checking("users.list");
 		d.should.have.property("success", true);
 
 		//d.should.have.property("resp")/.and != d.resp 

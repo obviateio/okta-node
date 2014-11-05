@@ -21,7 +21,7 @@ var ok = function() {
 }
 
 var now = new Date().valueOf();
-var newProfile = OktaAPI.Helpers.constructGroup("Test-" + now, "Test group from " + now);
+var newProfile = okta.groups.helpers.constructGroup("Test-" + now, "Test group from " + now);
 var uid, gid;
 
 log("Starting Test Suite...", true);
