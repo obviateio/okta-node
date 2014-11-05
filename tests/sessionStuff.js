@@ -1,5 +1,12 @@
+/*
+*   Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*   Only tests operaations done with sessions. Should call all the functions at 
+*   least once.
+*
+*/
+
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("", "jjohnson", true);
+var okta = new OktaAPI("", "", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
@@ -13,13 +20,19 @@ var ok = function() {
 }
 
 var now = new Date().valueOf();
+var username = "";
+var password = "";
 
 log("Starting Test Suite...", true);
 
 var sessionId;
 
-okta.createSession("snofox@snofox.net", "", null, function(d) {
-    checking("createSession");
+
+/*
+*   creates a session
+*/
+okta.sessions.create(username, password, null, function(d) {
+    checking("sessions.create");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
     sessionId = d.resp.id;
@@ -27,15 +40,34 @@ okta.createSession("snofox@snofox.net", "", null, function(d) {
     doThingsWithSession();
 });
 
+/*
+*   creates a session, with a token
+*/
+okta.sessions.create(username, password, {'additionalFields' : 'cookieToken'}, function(d) {
+    checking("sessions.create with one time token");
+    d.should.have.property("success", true);
+    d.should.have.property("resp").with.property("id");
+    //sessionId = d.resp.id;
+    ok();
+});
+
 function doThingsWithSession() {
-    okta.validateSession(sessionId, function(d) {
-        checking("validateSession");
+
+    /*
+    *   validates a session
+    */
+    okta.sessions.validate(sessionId, function(d) {
+        checking("sessions.validate");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id", sessionId);
         ok();
     });
-    okta.extendSession(sessionId, function(d) {
-        checking("extendSession");
+
+    /*
+    *   extends a session
+    */
+    okta.sessions.extend(sessionId, function(d) {
+        checking("sessions.extend");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id", sessionId);
         ok();
@@ -43,8 +75,12 @@ function doThingsWithSession() {
 }
 
 setTimeout(function() {
-    okta.closeSession(sessionId, function(d) {
-        checking("closeSession");
+
+    /*
+    *   closes a session
+    */
+    okta.sessions.close(sessionId, function(d) {
+        checking("sessions.close");
         d.should.have.property("success", true);
         ok();
     });

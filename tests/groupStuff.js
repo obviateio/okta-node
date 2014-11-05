@@ -1,5 +1,13 @@
+/*
+*   Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*   Only tests operaations done on groups. Should call all the functions at 
+*   least once.
+*
+*/
+
+
 var OktaAPI = require("../index.js");
-var okta = new OktaAPI("", "jjohnson", true);
+var okta = new OktaAPI("", "", false);
 var should = require("should");
 var log = function(str, newline) {
 	if(newline == undefined) newline = false;
@@ -13,13 +21,16 @@ var ok = function() {
 }
 
 var now = new Date().valueOf();
-var newProfile = OktaAPI.Helpers.constructGroup("Test-" + now, "Test group from " + now);
+var newProfile = okta.groups.helpers.constructGroup("Test-" + now, "Test group from " + now);
 var uid, gid;
 
 log("Starting Test Suite...", true);
 
-okta.addGroup(newProfile, function(d) {
-    checking("addGroup");
+/*
+*   add a new group 
+*/
+okta.groups.add(newProfile, function(d) {
+    checking("groups.add");
     d.should.have.property("success", true);
     d.should.have.property("resp").with.property("id");
     ok();
@@ -27,43 +38,105 @@ okta.addGroup(newProfile, function(d) {
     getUser();
 });
 
+
+
+function deleteEveryThing() {
+
+    /*
+    *   deletes a group 
+    */
+    okta.groups.delete(gid, function(d) {
+        checking("groups.delete");
+        d.should.have.property("success", true);
+        ok();
+    });
+}
+
 function doThingsWithGroup() {
-    okta.getGroup(gid, function(d) {
-        checking("getGroup");
+
+    /*
+    *   gets a group by it's id
+    */
+    okta.groups.get(gid, function(d) {
+        checking("groups.get");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id");
         ok();
     });
-    okta.updateGroup(gid, newProfile, function(d) {
-        checking("updateGroup");
+
+    /*
+    *   updates a group with a new profile
+    */
+    okta.groups.update(gid, newProfile, function(d) {
+        checking("groups.update");
         d.should.have.property("success", true);
         d.should.have.property("resp").with.property("id");
         ok();
     });
-    okta.addUserToGroup(gid, uid, function(d) {
-        checking("addUserToGroup");
+
+    /*
+    *   adds a user to a group by group id and user id
+    */
+    okta.groups.addUser(gid, uid, function(d) {
+        checking("groups.addUser");
         d.should.have.property("success", true);
         ok();
-        okta.removeUserFromGroup(gid, uid, function(d) {
-            checking("removeUserFromGroup");
+
+        /*
+        *   removes a user to a group by group id and user id
+        */
+        okta.groups.removeUser(gid, uid, function(d) {
+            checking("groups.removeUser");
             d.should.have.property("success", true);
             ok();
         });
     });
-    okta.getUsersInGroup(gid, function(d) {
-        checking("getUsersInGroup");
-        d.should.have.property("success", true);
-        d.should.have.property("resp").instanceof(Array);
-        ok();
-    })
-    okta.getGroups(null, function(d) {
-        checking("getGroups");
+
+    /*
+    *   gets all users in a group by group id
+    */
+    okta.groups.getUsers(gid,null, function(d) {
+        checking("groups.getUsers");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
     });
-    okta.getAppsForGroup(gid, null, function(d) {
-        checking("getAppsForGroup");
+
+    /*
+    *   gets all users in a group by group id, with a filter
+    */
+    okta.groups.getUsers(gid, {'limit' : 20}, function(d) {
+        checking("groups.getUsers with limit");
+        d.should.have.property("success", true);
+        d.should.have.property("resp").instanceof(Array);
+        ok();
+    });
+
+    /*
+    *   gets all groups
+    */
+    okta.groups.list(null, function(d) {
+        checking("groups.get");
+        d.should.have.property("success", true);
+        d.should.have.property("resp").instanceof(Array);
+        ok();
+    });
+
+    /*
+    *   gets all groups, with filter 
+    */
+    okta.groups.list({'q': "Test-" + now, 'limit' : 1 }, function(d) {
+        checking("groups.list with query");
+        d.should.have.property("success", true);
+        d.should.have.property("resp").instanceof(Array);
+        ok();
+    });
+
+    /*
+    *   gets all apps assigned to group
+    */
+    okta.groups.getApps(gid, null, function(d) {
+        checking("groups.getApps");
         d.should.have.property("success", true);
         d.should.have.property("resp").instanceof(Array);
         ok();
@@ -71,7 +144,10 @@ function doThingsWithGroup() {
 }
 
 function getUser() {
-    okta.getUser("snofox@snofox.net", function(d) {
+    /*
+    *   gets a user to put in a group
+    */
+    okta.users.get("test@example.com", function(d) {
         if (!d.success) {
             throw new Error("Failed to get user from Okta: " + d.error);
         } else if (d.resp.hasOwnProperty("errorCode")) {
@@ -82,12 +158,6 @@ function getUser() {
     });
 }
 
-function deleteEveryThing() {
-    okta.deleteGroup(gid, function(d) {
-        checking("deleteGroup");
-        d.should.have.property("success", true);
-        ok();
-    });
-}
-
 setTimeout(deleteEveryThing, 5000);
+
+
