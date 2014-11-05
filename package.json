@@ -4,7 +4,6 @@
     "author": "Josh Johnson <jjohnson@okta.com>",
     "dependencies": {
         "request": "2.29.0",
-        "check-types" : "1.4.0"
     },
     "repository": {
         "type": "git",
