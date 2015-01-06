@@ -61,13 +61,13 @@ If followLink is set to true or ommitted, pagintated responses will automaticall
 If followLink is set to false, the paginated response will have a field for the link that will request the next set of data:
 ```JSON
 {
-    success: true,
-    paged: true,
-    pageEnd: false,
-    resp: {
+    "success": true,
+    "paged": true,
+    "pageEnd": false,
+    "resp": {
         <json object from OktaAPI>
-    }
-    next: '<link for next set of data>'
+    },
+    "next": "<link for next set of data>"
 }
 ```
 
