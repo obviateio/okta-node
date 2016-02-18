@@ -1,7 +1,7 @@
 /*
-*   Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
-*   Only tests operaations done with sessions. Should call all the functions at 
-*   least once.
+* Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*	Only tests operations done on events. Should call all the functions at
+*	least once.
 *
 */
 

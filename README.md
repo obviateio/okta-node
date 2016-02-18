@@ -1,11 +1,10 @@
-okta-node
-=========
+# okta-node
 
 A small NodeJS framework for working with the [Okta](http://www.okta.com/) API
 
-# *NOTE* We are on version 2 now, this update broke all previous versions. Sorry!
+** *NOTE*  We are on version 2 now, this update is not v1 backwards compatible. **
 
-# Overview
+## Overview
 This API is a small layer that handles talking to the Okta API. Primarily:
 - Maps function calls to their correct Okta endpoints
 - Formats the body and queries of arguments passed to the Okta endpoint
@@ -13,19 +12,24 @@ This API is a small layer that handles talking to the Okta API. Primarily:
 
 This document will refer to itself as "this API" and the Okta API as simply, "Okta".
 
-# Usage
-To get started, you MUST obtain an API key from your Okta's Support Team.
-Or if you have access to the admin panel of your Okta. Follow [these](http://developer.okta.com/docs/getting_started/getting_a_token.html) instructions.
+[![NPM](https://nodei.co/npm/okta-node.png?compact=true)](https://nodei.co/npm/okta-node/)
+
+[![Dependency Status](https://david-dm.org/oktait/okta-node.svg)](https://david-dm.org/oktait/okta-node)
+[![GitHub issues](https://img.shields.io/github/issues/oktait/okta-node.svg)](https://github.com/oktait/okta-node/issues)
+
+
+## Usage
+To get started, you need an [Okta API key](http://developer.okta.com/docs/getting_started/getting_a_token.html).
 
 This API is for Okta API version 1.
 
-```node
-var OktaAPI = require('OktaAPI');
+```js
+var OktaAPI = require('okta-node');
 var okta = new OktaAPI("Your-Okta-API-Key", "your-domain");
 ```
 
 If you're testing in the Okta Preview environment, add a bool to the end of the constructor
-```node
+```js
 var okta = new OktaAPI("Your-Okta-API-Key", "your-domain", true);
 ```
 
@@ -47,7 +51,7 @@ Note that simply because the "success" property is true, doesn't mean your reque
 - Some actions will return HTTP Status 204 - No Content. These will not have a resp property.
 
 Paginated requests are encouraged where available; this API will automatically detect and give you the option to follow through all the data from a paginated request with the flag followLink, calling the callback with each page.
-If followLink is set to true or ommitted, pagintated responses will automatically send all the paginated requests. The responses will be in the following format :
+If followLink is set to true or omitted, paginated responses will automatically send all the paginated requests. The responses will be in the following format :
 ```JSON
 {
     "success": true,
@@ -65,7 +69,7 @@ If followLink is set to false, the paginated response will have a field for the 
     "paged": true,
     "pageEnd": false,
     "resp": {
-        <json object from OktaAPI>
+        "<json object from OktaAPI>"
     },
     "next": "<link for next set of data>"
 }
@@ -84,11 +88,11 @@ This object MAY NOT include the "resp" property. Existence of it means one of th
 1. You are not authorized to access Okta. resp will contain the response from Okta, indicating why you cannot access it.
 2. Okta returned an invalid response to this API. resp will contain the response Okta gave for further troubleshooting.
 
-# Response structure
+## Response structure
 Responses from Okta are left in the same format as it is received. The information on how Okta responds to requests can be found [here](http://developer.okta.com/docs/getting_started/design_principles.html).
 
-# Structure
-The structure of this API is broken up into 5 parts each with it's own helper if applicable. Each part is in files in the lib/ directory and are named: 
+## Structure
+The structure of this API is broken up into 5 parts each with it's own helper if applicable. Each part is in files in the lib/ directory and are named:
 - OktaAPIUsers.js
 - OktaAPIGroups.js
 - OktaAPISessions.js
@@ -98,15 +102,15 @@ The structure of this API is broken up into 5 parts each with it's own helper if
 Here are the functions in each of the files:
 ```node
 OktaAPIUsers.js:
-    exampleOkta.users.list(search, followLink, callback) 
-    exampleOkta.users.get(who, callback) 
+    exampleOkta.users.list(search, followLink, callback)
+    exampleOkta.users.get(who, callback)
     exampleOkta.users.add(profile, credentials, activate, callback)
     exampleOkta.users.update(id, profile, credentials, callback)
-    exampleOkta.users.updatePartial(userId, partialProfile, partialCredentials, callback) 
-    exampleOkta.users.getApps(id, callback) 
-    exampleOkta.users.getGroups(id, callback) 
+    exampleOkta.users.updatePartial(userId, partialProfile, partialCredentials, callback)
+    exampleOkta.users.getApps(id, callback)
+    exampleOkta.users.getGroups(id, callback)
     exampleOkta.users.activate(id, sendEmail, callback)
-    exampleOkta.users.deactivate(id, callback) 
+    exampleOkta.users.deactivate(id, callback)
     exampleOkta.users.unlock(id, callback)
     exampleOkta.users.resetPassword(id, sendEmail, callback)
     exampleOkta.users.expirePassword(id, tempPassword, callback)
@@ -126,27 +130,27 @@ OktaAPIGroups.js:
     exampleOkta.groups.addUser(groupId, userId, callback)
     exampleOkta.groups.removeUser(groupId, userId, callback)
     exampleOkta.groups.getApps(groupId, search, followLink, callback)
-    
+
 OktaAPISessions.js:
     exampleOkta.sessions.create(user, pass, additionalFields, callback)
     exampleOkta.sessions.validate(sessionId, callback)
-    exampleOkta.sessions.extend(sessionId, callback) 
+    exampleOkta.sessions.extend(sessionId, callback)
     exampleOkta.sessions.close(sessionId, callback)
 
 OktaAPIApps.js:
     exampleOkta.apps.add(appModel, callback)
-    exampleOkta.apps.get(id, callback) 
-    exampleOkta.apps.list(queryObj, callback) 
-    exampleOkta.apps.update(id, profile, callback) 
-    exampleOkta.apps.delete(id, callback) 
-    exampleOkta.apps.activate(id, callback) 
-    exampleOkta.apps.deactivate(id, callback) 
-    exampleOkta.apps.assignUser(appId, appUserModel, callback) 
-    exampleOkta.apps.getAssignedUser(appId, uid, callback) 
+    exampleOkta.apps.get(id, callback)
+    exampleOkta.apps.list(queryObj, callback)
+    exampleOkta.apps.update(id, profile, callback)
+    exampleOkta.apps.delete(id, callback)
+    exampleOkta.apps.activate(id, callback)
+    exampleOkta.apps.deactivate(id, callback)
+    exampleOkta.apps.assignUser(appId, appUserModel, callback)
+    exampleOkta.apps.getAssignedUser(appId, uid, callback)
     exampleOkta.apps.listUsersAssigned(id, callback)
-    exampleOkta.apps.updateAppCredsForUser(aid, uid, appUserModel, callback) 
-    exampleOkta.apps.updateAppProfileForUser(aid, uid, appUserModel, callback) 
-    exampleOkta.apps.removeUser(aid, uid, callback) 
+    exampleOkta.apps.updateAppCredsForUser(aid, uid, appUserModel, callback)
+    exampleOkta.apps.updateAppProfileForUser(aid, uid, appUserModel, callback)
+    exampleOkta.apps.removeUser(aid, uid, callback)
     exampleOkta.apps.assignGroup(aid, gid, appGroup, callback)
     exampleOkta.apps.getAssignedGroup(aid, gid, callback)
     exampleOkta.apps.listGroupsAssigned(aid, queryObj, callback)
@@ -158,14 +162,14 @@ OktaAPIEvents.js:
 ```
 *NOTE* The parameters queryObj or search must be in the format: {q: <query>, limit: <int>, filter: <filter>, after: <cursor>}. Attributes may be missing, but it must be passed an object.
 
-There are also helper functions in the OktaAPI<Apps/Users/etc.>Helpers.js files. The examples will demonstrate how to use them. 
+There are also helper functions in the OktaAPI<Apps/Users/etc.>Helpers.js files. The examples will demonstrate how to use them.
 
-# Examples
+## Examples
 Examples are good!
-There are also examples in the tests/ directory that demonstrate how to call the functions in these files. 
+There are also examples in the tests/ directory that demonstrate how to call the functions in these files.
 
-Provision and activate user:
-```node
+### Provision and activate user
+```js
 // Create a profile object that Okta can recognize
 var newProfile = OktaAPI.Helpers.constructProfile("Timothy", "McGee", "tmcgee@ncis.gov");
 // Create a credentials object
@@ -189,12 +193,20 @@ function doThings() {
 }
 ```
 
-# More Docs!
+### Print the first 100 users in CSV
+```js
+okta.users.list({'limit':100},function(d){
+  for(var i=0;i<d.resp.length;i++){
+    var p = d.resp[i].profile;
+    console.log("\""+p.login +"\",\""+ p.email +"\",\""+ p.firstName +"\",\""+p.lastName +"\",\""+ d.resp[i].status+"\"");
+  }
+});
+```
+
+## More Docs!
 All public-facing methods are documented with a Doxygen-like syntax. You can run a tool like [YUIDoc](http://yui.github.io/yuidoc/) to generate your own set.
 
-# Disclaimer & License
+## Disclaimer & License
 Please be aware that all material published under the [OktaIT](https://github.com/OktaIT/) project have been written by the [Okta](http://www.okta.com/) IT Department but are **NOT OFFICAL** software release of Okta Inc.  As such, the software is provided "as is" without warranty or customer support of any kind.
 
-This project is licensed under the MIT license, for more details please see the LICENSE file.
-
-
+This project is licensed under the MIT license, for more details please see the [LICENSE](LICENSE) file.

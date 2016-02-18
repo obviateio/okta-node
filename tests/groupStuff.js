@@ -1,7 +1,7 @@
 /*
-*   Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
-*   Only tests operaations done on groups. Should call all the functions at 
-*   least once.
+* Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
+*	Only tests operations done on events. Should call all the functions at
+*	least once.
 *
 */
 
@@ -27,7 +27,7 @@ var uid, gid;
 log("Starting Test Suite...", true);
 
 /*
-*   add a new group 
+*   add a new group
 */
 okta.groups.add(newProfile, function(d) {
     checking("groups.add");
@@ -43,7 +43,7 @@ okta.groups.add(newProfile, function(d) {
 function deleteEveryThing() {
 
     /*
-    *   deletes a group 
+    *   deletes a group
     */
     okta.groups.delete(gid, function(d) {
         checking("groups.delete");
@@ -123,7 +123,7 @@ function doThingsWithGroup() {
     });
 
     /*
-    *   gets all groups, with filter 
+    *   gets all groups, with filter
     */
     okta.groups.list({'q': "Test-" + now, 'limit' : 1 }, function(d) {
         checking("groups.list with query");
@@ -159,5 +159,3 @@ function getUser() {
 }
 
 setTimeout(deleteEveryThing, 5000);
-
-

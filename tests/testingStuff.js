@@ -76,7 +76,7 @@ function main()
 	// 	checking("getUsers");
 	// 	d.should.have.property("success", true);
 
-	// 	//d.should.have.property("resp")/.and != d.resp 
+	// 	//d.should.have.property("resp")/.and != d.resp
 	// 	//it's like an object full of arrays, contains some metadata it looks like
 	// 	d.should.have.property("resp");
 	// 	var resp = d.resp;
@@ -87,7 +87,7 @@ function main()
 	// 		checking("getUsers");
 	// 		d.should.have.property("success", true);
 
-	// 		//d.should.have.property("resp")/.and != d.resp 
+	// 		//d.should.have.property("resp")/.and != d.resp
 	// 		//it's like an object full of arrays, contains some metadata it looks like
 	// 		d.should.have.property("resp", getGroupsResp);
 	// 		var resp = d.resp;
@@ -136,4 +136,3 @@ function main()
 
 
 main();
-

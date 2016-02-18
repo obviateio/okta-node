@@ -1,6 +1,6 @@
 /*
 *	Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
-*	Only tests operaations done on events. Should call all the functions at 
+*	Only tests operations done on events. Should call all the functions at 
 *	least once.
 *
 */
@@ -46,4 +46,3 @@ function main()
 
 
 main();
-
