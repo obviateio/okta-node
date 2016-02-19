@@ -1,6 +1,6 @@
 /*
 *	Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
-*	Only tests operaations done on Users. Should call all the functions at 
+*	Only tests operations done on events. Should call all the functions at
 *	least once.
 *
 */
@@ -151,7 +151,7 @@ function checkLifecycleOps()
 	// 	d.should.have.property("success", true);
 	// 	ok();
 	// });
-	
+
 	/*
 	*	Unlocks a user
 	*/
@@ -226,7 +226,7 @@ function updateUser() {
 		resp.should.have.property("profile").with.property("firstName", "Timothy");
 		ok();
 	});
-	
+
 	/*
 	*	Update user with partial credentials, no recovery question
 	*/
@@ -267,7 +267,7 @@ function checkGetUsers()
 		checking("users.list");
 		d.should.have.property("success", true);
 
-		//d.should.have.property("resp")/.and != d.resp 
+		//d.should.have.property("resp")/.and != d.resp
 		//it's like an object full of arrays, contains some metadata it looks like
 		d.should.have.property("resp");
 		var resp = d.resp;
@@ -278,7 +278,7 @@ function checkGetUsers()
 		okta.users.list({'q': "tmcgee+" + now}, function(d) {
 			checking("okta.users.list");
 			d.should.have.property("success", true);
-			//d.should.have.property("resp")/.and != d.resp 
+			//d.should.have.property("resp")/.and != d.resp
 			//it's like an object full of arrays, contains some metadata it looks like
 			d.should.have.property("resp");
 			var newResp = d.resp;
@@ -370,5 +370,3 @@ function main() {
 
 
 main();
-
-

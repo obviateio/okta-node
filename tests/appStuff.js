@@ -1,6 +1,6 @@
 /*
 *	Tests the nodejs wrapper. Also can serve as examples to use the wrapper.
-*	Only tests operaations done on Apps. Should run all ops once.
+*	Only tests operations done on Apps. Should run all ops once.
 *	should deprovision/delete everything that i creates
 *	Tests are chained, no way out of it that I can think of right now
 *
@@ -31,7 +31,7 @@ var appModelOldWay = OktaAPI.Helpers.constructAppGroupModel();
 /*
 *	a bunch of profiles, grabbed these from Okta docs
 */
-var appProfile = 
+var appProfile =
 {
   "name": "template_saml_2_0",
   "label": "Example SAML App" + now,
@@ -57,7 +57,7 @@ var appProfile =
   }
 };
 
-var appUserProfile = 
+var appUserProfile =
 {
   "id": "",
   "scope": "USER",
@@ -69,7 +69,7 @@ var appUserProfile =
   }
 };
 
-var appUserProfileUpdate = 
+var appUserProfileUpdate =
 {
   "profile": {
     "salesforceGroups": [
@@ -80,7 +80,7 @@ var appUserProfileUpdate =
   }
 };
 
-var newAppCred = 
+var newAppCred =
 {
   "credentials": {
     "userName": "user@example.com",
@@ -97,7 +97,7 @@ function cleanUpGroups()
 {
 
     /*
-    *   deletes a group 
+    *   deletes a group
     */
 	okta.groups.delete(gid1, function(d) {
         //checking("deleteGroup");
@@ -106,7 +106,7 @@ function cleanUpGroups()
     });
 
     /*
-    *   deletes a group 
+    *   deletes a group
     */
     okta.groups.delete(gid2, function(d) {
         //checking("deleteGroup");
@@ -120,7 +120,7 @@ function checkDeleteOp()
 {
 
     /*
-    *   deletes an app 
+    *   deletes an app
     */
 	okta.apps.delete(appId, function(d) {
 	    checking("apps.delete");
@@ -145,7 +145,7 @@ function checkLifecycleOps()
 	    ok();
 
 	    /*
-	    *   activates a group 
+	    *   activates a group
 	    */
 		okta.apps.activate(appId, function(d) {
 		    checking("apps.activate");
@@ -171,7 +171,7 @@ function checkAppGroupOps()
 
 
     /*
-    *   adds a group 
+    *   adds a group
     */
 	okta.groups.add(newProfile, function(d) {
 	    checking("groups.add");
@@ -242,7 +242,7 @@ function checkAppUserOps()
 {
 
     /*
-    *   adds a user 
+    *   adds a user
 	*/
 	okta.users.add(newProfile, newCreds, false, function(d) {
 		checking("users.add");
@@ -252,7 +252,7 @@ function checkAppUserOps()
 		ok();
 
 	    /*
-	    *   assigns a user to an Application, *NOTE* appUserProfile != response you get from adding a user 
+	    *   assigns a user to an Application, *NOTE* appUserProfile != response you get from adding a user
 		*/
 		appUserProfile.id = newUserId;
 		okta.apps.assignUser(appId, appUserProfile, function(d) {
@@ -442,10 +442,3 @@ function main()
 
 
 main();
-
-
-
-
-
-
-
